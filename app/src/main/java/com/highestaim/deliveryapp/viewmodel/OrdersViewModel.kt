@@ -1,4 +1,4 @@
-package com.highestaim.viewmodel
+package com.highestaim.deliveryapp.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

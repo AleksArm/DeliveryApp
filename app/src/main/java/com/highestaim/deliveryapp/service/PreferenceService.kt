@@ -15,7 +15,7 @@ class PreferenceService {
     private val gson by lazy { Gson() }
 
 
-    fun saveRestsNative(orders: List<Order>) {
+    fun saveOrders(orders: List<Order>) {
         ordersSharedPreference?.edit()?.putString("order", Gson().toJson(orders))?.apply()
     }
 

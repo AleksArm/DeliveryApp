@@ -11,7 +11,7 @@ import com.highestaim.deliveryapp.util.AppKee.OPEN_ENUM
 import com.highestaim.deliveryapp.util.AppKee.ORDER
 import com.highestaim.deliveryapp.util.initRecyclerView
 import com.highestaim.deliveryapp.util.replaceFragment
-import com.highestaim.viewmodel.OrdersViewModel
+import com.highestaim.deliveryapp.viewmodel.OrdersViewModel
 import kotlinx.android.synthetic.main.stops_tab_fragment_layout.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -37,7 +37,7 @@ class StopsTabFragment : BaseFragment() {
     private fun setOrders() {
         ordersViewModel.getOrders().observe(viewLifecycleOwner, Observer {
             ordersAdapter.submitList(it)
-            PreferenceService.get().saveRestsNative(it)
+            PreferenceService.get().saveOrders(it)
         })
     }
 
