@@ -1,8 +1,8 @@
 package com.highestaim.deliveryapp.ui
 
 import android.Manifest
+import android.content.SharedPreferences
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -26,7 +26,8 @@ import com.highestaim.deliveryapp.util.AppConstants.MAP_CAMERA_ZOOM
 import com.highestaim.deliveryapp.util.AppConstants.MAP_ROUTE_WIDTH
 import com.highestaim.deliveryapp.util.AppKee.OPEN_ENUM
 import com.highestaim.deliveryapp.util.AppKee.ORDER
-import com.highestaim.deliveryapp.util.MockDataService.getOrders
+import com.highestaim.deliveryapp.service.MockDataService.getOrders
+import com.highestaim.deliveryapp.service.PreferenceService
 import com.highestaim.deliveryapp.util.Utils.getMarkerIconFromDrawable
 import com.highestaim.deliveryapp.util.requestSingleLocation
 import com.innfinity.permissionflow.lib.permissionFlow
@@ -42,7 +43,6 @@ import kotlinx.coroutines.launch
 class MapFragment : BaseFragment() {
 
     private var googleMap: GoogleMap? = null
-
     private var mapOpenEnum: MapEnum? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,7 +79,7 @@ class MapFragment : BaseFragment() {
             googleMap = it
 
             if (mapOpenEnum == MapEnum.FROM_TAB) {
-                getOrders()[0].address?.coordinates?.let { location -> cameraMoveTo(location) }
+                PreferenceService.get().getOrders()?.get(0)?.address?.coordinates?.let { location -> cameraMoveTo(location) }
                 addingOrdersMarkers()
             } else if (mapOpenEnum == MapEnum.FROM_NAVIGATE) {
                 getCurrentLocation()
@@ -89,17 +89,19 @@ class MapFragment : BaseFragment() {
     }
 
     private fun addingOrdersMarkers() {
-        val orders = getOrders()
-
-        for (order in orders) {
-            googleMap?.addMarker(
-                order.address?.coordinates?.let {
-                    MarkerOptions()
-                        .position(it)
-                        .title(order.address?.address)
-                }
-            )
+        val orders = PreferenceService.get().getOrders()
+        orders?.let {
+            for (order in it) {
+                googleMap?.addMarker(
+                    order.address?.coordinates?.let {latLang ->
+                        MarkerOptions()
+                            .position(latLang)
+                            .title(order.address?.address)
+                    }
+                )
+            }
         }
+
     }
 
     private fun cameraMoveTo(latLng: LatLng) {
@@ -148,7 +150,7 @@ class MapFragment : BaseFragment() {
     }
 
     private fun drawRoute(currentLocation: LatLng, destinationLocation: LatLng?) {
-        GoogleDirection.withServerKey("")
+        GoogleDirection.withServerKey(getString(R.string.google_maps_key))
             .from(currentLocation)
             .to(destinationLocation)
             .avoid(AvoidType.FERRIES)
@@ -163,7 +165,6 @@ class MapFragment : BaseFragment() {
                             PolylineOptions().addAll(leg.directionPoint).color(Color.RED).width(MAP_ROUTE_WIDTH)
                         googleMap?.addPolyline(opts)
                     } else {
-                        Toast.makeText(context,"Please Set Valid Map Direction Api Key For Route",Toast.LENGTH_LONG).show()
                         Log.e("Direction Error", direction.errorMessage)
                     }
                 }

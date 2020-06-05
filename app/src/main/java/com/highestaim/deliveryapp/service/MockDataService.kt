@@ -1,4 +1,4 @@
-package com.highestaim.deliveryapp.util
+package com.highestaim.deliveryapp.service
 
 import com.google.android.gms.maps.model.LatLng
 import com.highestaim.deliveryapp.dto.Address

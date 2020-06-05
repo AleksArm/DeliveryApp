@@ -5,12 +5,14 @@ import android.view.View
 import com.google.android.material.tabs.TabLayout
 import com.highestaim.deliveryapp.R
 import com.highestaim.deliveryapp.enum.MapEnum
+import com.highestaim.deliveryapp.service.MockDataService
+import com.highestaim.deliveryapp.service.MockDataService.getOrders
 import com.highestaim.deliveryapp.util.AppKee.OPEN_ENUM
-import com.highestaim.deliveryapp.util.MockDataService
 import com.highestaim.deliveryapp.util.replaceTabFragment
 import kotlinx.android.synthetic.main.orders_fragment.*
 
 class OrdersFragment : BaseFragment() {
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupTabLayout()
@@ -22,7 +24,7 @@ class OrdersFragment : BaseFragment() {
 
     private fun setupTabLayout() {
         val mapFragment = tabLayout?.newTab()
-            ?.setText("${getString(R.string.stops)}   (${MockDataService.getOrders().size})")
+            ?.setText("${getString(R.string.stops)}   (${getOrders().size})")
         val stopsFragment = tabLayout?.newTab()?.setText(R.string.map)
         mapFragment?.let { tabLayout?.addTab(it, true) }
         stopsFragment?.let { tabLayout?.addTab(it) }
