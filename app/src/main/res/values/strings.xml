@@ -1,0 +1,10 @@
+<resources>
+    <string name="google_maps_key">AIzaSyBT-b-jzq2UI03MZt_kaaaozrYfAwhvnrM</string>
+
+
+    <string name="app_name">DeliveryApp</string>
+    <string name="stops">STOPS</string>
+    <string name="map">MAP</string>
+    <string name="navigate">NAVIGATE</string>
+    <string name="finish">FINISH</string>
+</resources>
